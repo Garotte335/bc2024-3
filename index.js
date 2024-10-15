@@ -6,7 +6,7 @@ const program = new Command();
 
 program
   .version('1.0.0')
-  .description('Process input file and output results')
+  .description('Process input file and find maximum exchange rate')
   .requiredOption('-i, --input <path>', 'Path to the input JSON file')
   .option('-o, --output <path>', 'Path to the output file')
   .option('-d, --display', 'Display result in the console')
@@ -26,29 +26,30 @@ if (!fs.existsSync(options.input)) {
   process.exit(1);
 }
 
-// Read the input file
-const inputFilePath = path.resolve(options.input);
-
 try {
+  // Read the input file
+  const inputFilePath = path.resolve(options.input);
   const data = fs.readFileSync(inputFilePath, 'utf-8');
   const parsedData = JSON.parse(data);
 
-  // Result to be output
-  const result = JSON.stringify(parsedData, null, 2);
+  // Find the maximum exchange rate
+  const rates = parsedData.map((item) => item.rate);
+  const maxRate = Math.max(...rates);
+  const result = `Максимальний курс: ${maxRate}`;
 
-  // If --display option is set, print to console
+  // Display result in the console if --display is set
   if (options.display) {
     console.log(result);
   }
 
-  // If --output option is set, write to file
+  // Write result to the output file if --output is set
   if (options.output) {
     const outputFilePath = path.resolve(options.output);
     fs.writeFileSync(outputFilePath, result, 'utf-8');
     console.log(`Result written to ${outputFilePath}`);
   }
 
-  // If no optional parameters were set, do nothing
+  // Exit without output if no optional parameters are provided
   if (!options.display && !options.output) {
     process.exit(0);
   }
