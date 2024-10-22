@@ -5,9 +5,7 @@ const path = require('path');
 const program = new Command();
 
 program
-  .version('1.0.0')
-  .description('Process input file and find maximum exchange rate')
-  .requiredOption('-i, --input <path>', 'Path to the input JSON file')
+  .option('-i, --input <path>', 'Path to the input JSON file')
   .option('-o, --output <path>', 'Path to the output file')
   .option('-d, --display', 'Display result in the console')
   .parse(process.argv);
@@ -16,6 +14,7 @@ const options = program.opts();
 
 // Check if the input file is provided
 if (!options.input) {
+  //throw Error('Please, specify input file');
   console.error('Please, specify input file');
   process.exit(1);
 }
@@ -46,7 +45,7 @@ try {
   if (options.output) {
     const outputFilePath = path.resolve(options.output);
     fs.writeFileSync(outputFilePath, result, 'utf-8');
-    console.log(`Result written to ${outputFilePath}`);
+    //console.log(`Result written to ${outputFilePath}`);
   }
 
   // Exit without output if no optional parameters are provided
